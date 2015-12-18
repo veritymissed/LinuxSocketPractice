@@ -23,35 +23,32 @@ int main(int argc,const char* argv[]) {
   cout<<"Input the hostname or IP address!"<<endl;
   cin>>targetHost;
   if ( ( socketFd = client_connect(targetHost,PORT) )<0 ){
-  //if ( ( socketFd = client_connect("140.112.107.43",PORT) )<0 ){
     cout<<"Connect error to "<<targetHost<<endl;
     return 0;
   }
   cout<<"Connect established!"<<endl;
 
-  char recvBuf[10000];
-  char msg[100];
-
+  int sizeRecv = 10000;
+  int sizeSend = 100;
+  char recvBuf[sizeRecv];
+  char sendBuf[sizeSend];
+  ///Send and recv loop
   while (1) {
-    int bytes_recv;
-    if( ( bytes_recv=recv(socketFd,recvBuf,10000,0) )<0 ){
-      cout<<"Receive msg error"<<endl;
+    if( recv(socketFd,recvBuf,sizeRecv,0) < 0 ){
+      cout<<"Receive message error"<<endl;
       return 0;
     }
-
-    cout<<"Server msg: "<<recvBuf<<endl;
+    cout<<"Server message: "<<recvBuf<<endl;
 
     cout<<"Input:"<<endl;
-    cin>>msg;
+    cin>>sendBuf;
 
-
-    int len = strlen(msg);
-    if( send(socketFd,msg,len,0) <0 ){
-      cout<<"Send msg error"<<endl;
+    if( send(socketFd,sendBuf,sizeSend,0) < 0 ){
+      cout<<"Send sendBuf error"<<endl;
       return 0;
     }
   }
-
+  ///
   return 0;
 }
 
